@@ -629,8 +629,17 @@ a:focus {
   font-size: 20px;
   font-weight: 700;
   color: var(--text-dark);
-  margin: 0;
+  margin: 0 0 0.75rem 0;
   line-height: 1.3;
+}
+
+.cycle-classes {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--primary-blue);
+  margin: 0;
+  line-height: 1.5;
+  opacity: 0.9;
 }
 
 .cycle-badge {
@@ -1659,6 +1668,10 @@ a:focus {
     font-size: 18px;
   }
 
+  .cycle-classes {
+    font-size: 13px;
+  }
+
   .stat-number {
     font-size: 36px;
   }
@@ -1976,6 +1989,10 @@ a:focus {
 
   .cycle-name {
     font-size: 16px;
+  }
+
+  .cycle-classes {
+    font-size: 12px;
   }
 
   .cycle-badge {
