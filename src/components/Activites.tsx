@@ -1,6 +1,9 @@
 import { useRef, useEffect } from 'react'
 import { useCarousel } from '../hooks/useCarousel'
 import { useRevealOnScroll } from '../hooks/useRevealOnScroll'
+import opendoor from '/assets/opendoor.jpg'
+import result from '/assets/result.jpg'
+import lab from '/assets/LAB.jpg'
 import imagelabo from '/assets/imagelabo.jpg'
 import imagelabo2 from '/assets/imagelabo2.jpg'
 import layout1 from '/assets/layout1.png'
@@ -12,7 +15,7 @@ const activities = [
     title: 'Journée portes ouvertes 2024',
     description:
       'Le Complexe Scolaire La Grâce ouvre ses portes le samedi 30 mars de 9h à 17h. Venez découvrir nos installations, rencontrer nos enseignants et découvrir nos programmes.',
-    image: imagelabo,
+    image: opendoor,
     alt: 'Journée portes ouvertes',
   },
   {
@@ -21,7 +24,7 @@ const activities = [
     title: 'Résultats exceptionnels au baccalauréat',
     description:
       'Félicitations à nos élèves de terminale qui ont obtenu 95% de réussite au baccalauréat 2024, avec 60% de mentions. Un résultat qui témoigne de la qualité de notre enseignement.',
-    image: imagelabo2,
+    image: result,
     alt: 'Résultats exceptionnels',
   },
   {
@@ -30,7 +33,7 @@ const activities = [
     title: 'Nouveau laboratoire de sciences',
     description:
       'Inauguration de notre nouveau laboratoire de sciences équipé des dernières technologies. Un espace moderne pour favoriser l\'apprentissage pratique et l\'expérimentation.',
-    image: layout1,
+    image: lab,
     alt: 'Nouveau laboratoire',
   },
 ]
