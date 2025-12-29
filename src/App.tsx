@@ -6,6 +6,7 @@ import Activites from './components/Activites'
 import Divers from './components/Divers'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import Chatbot from './components/Chatbot'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Divers />
       <Contact />
       <Footer />
+      <Chatbot />
     </>
   )
 }
