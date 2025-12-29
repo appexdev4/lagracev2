@@ -140,7 +140,7 @@ const Footer = () => {
         </div>
 
         <div className="footer-bottom">
-          <p>&copy; 2024 Complexe Scolaire La Grâce. Tous droits réservés.</p>
+          <p>&copy; 2025 Complexe Scolaire La Grâce. Tous droits réservés.</p>
         </div>
       </div>
     </footer>
