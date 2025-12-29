@@ -8,24 +8,40 @@ export const useRevealOnScroll = (delay: number = 0) => {
     if (!element) return
 
     const revealPoint = 150
-    const windowHeight = window.innerHeight
+    let ticking = false
+    let isRevealed = false
 
     const revealOnScroll = () => {
-      const elementTop = element.getBoundingClientRect().top
-      if (elementTop < windowHeight - revealPoint) {
-        element.classList.add('active')
-      }
+      if (isRevealed || ticking) return
+      
+      ticking = true
+      requestAnimationFrame(() => {
+        const windowHeight = window.innerHeight
+        const elementTop = element.getBoundingClientRect().top
+        
+        if (elementTop < windowHeight - revealPoint) {
+          element.classList.add('active')
+          isRevealed = true
+        }
+        
+        ticking = false
+      })
+    }
+
+    const handleResize = () => {
+      if (isRevealed) return
+      revealOnScroll()
     }
 
     // Vérifier immédiatement si l'élément est déjà visible
     revealOnScroll()
     
-    window.addEventListener('scroll', revealOnScroll)
-    window.addEventListener('resize', revealOnScroll)
+    window.addEventListener('scroll', revealOnScroll, { passive: true })
+    window.addEventListener('resize', handleResize, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', revealOnScroll)
-      window.removeEventListener('resize', revealOnScroll)
+      window.removeEventListener('resize', handleResize)
     }
   }, [])
 

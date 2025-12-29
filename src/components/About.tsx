@@ -28,25 +28,41 @@ const About = () => {
     if (revealElements.length === 0) return
 
     const revealPoint = 150
-    const windowHeight = window.innerHeight
+    let windowHeight = window.innerHeight
+    let ticking = false
+    const revealedElements = new Set<Element>()
 
     const revealOnScroll = () => {
-      revealElements.forEach((element) => {
-        const elementTop = element.getBoundingClientRect().top
-        if (elementTop < windowHeight - revealPoint) {
-          element.classList.add('active')
-        }
+      if (ticking) return
+      ticking = true
+
+      requestAnimationFrame(() => {
+        revealElements.forEach((element) => {
+          if (revealedElements.has(element)) return
+          
+          const elementTop = element.getBoundingClientRect().top
+          if (elementTop < windowHeight - revealPoint) {
+            element.classList.add('active')
+            revealedElements.add(element)
+          }
+        })
+        ticking = false
       })
+    }
+
+    const handleResize = () => {
+      windowHeight = window.innerHeight
+      revealOnScroll()
     }
 
     // Vérifier immédiatement au chargement
     setTimeout(revealOnScroll, 100)
-    window.addEventListener('scroll', revealOnScroll)
-    window.addEventListener('resize', revealOnScroll)
+    window.addEventListener('scroll', revealOnScroll, { passive: true })
+    window.addEventListener('resize', handleResize, { passive: true })
 
     return () => {
       window.removeEventListener('scroll', revealOnScroll)
-      window.removeEventListener('resize', revealOnScroll)
+      window.removeEventListener('resize', handleResize)
     }
   }, [])
 

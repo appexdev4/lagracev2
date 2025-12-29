@@ -16,24 +16,52 @@ const Header = () => {
 
   useEffect(() => {
     const sections = document.querySelectorAll('section[id]')
-    const updateActiveNav = () => {
-      const scrollY = window.pageYOffset
+    let ticking = false
+    const sectionData = Array.from(sections).map((section) => ({
+      element: section as HTMLElement,
+      id: section.getAttribute('id') || 'accueil',
+      top: 0,
+      height: 0,
+    }))
 
-      sections.forEach((section) => {
-        const sectionHeight = section.getBoundingClientRect().height
-        const sectionTop = (section as HTMLElement).offsetTop - 100
-        const sectionId = section.getAttribute('id')
-
-        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-          setActiveSection(sectionId || 'accueil')
-        }
+    const updateSectionData = () => {
+      sectionData.forEach((data) => {
+        data.top = data.element.offsetTop - 100
+        data.height = data.element.getBoundingClientRect().height
       })
     }
 
-    window.addEventListener('scroll', updateActiveNav)
-    updateActiveNav()
+    const updateActiveNav = () => {
+      if (ticking) return
+      ticking = true
 
-    return () => window.removeEventListener('scroll', updateActiveNav)
+      requestAnimationFrame(() => {
+        const scrollY = window.pageYOffset
+
+        for (const data of sectionData) {
+          if (scrollY > data.top && scrollY <= data.top + data.height) {
+            setActiveSection(data.id)
+            break
+          }
+        }
+        ticking = false
+      })
+    }
+
+    const handleResize = () => {
+      updateSectionData()
+      updateActiveNav()
+    }
+
+    updateSectionData()
+    updateActiveNav()
+    window.addEventListener('scroll', updateActiveNav, { passive: true })
+    window.addEventListener('resize', handleResize, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', updateActiveNav)
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {

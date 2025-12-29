@@ -1,9 +1,12 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useMemo } from 'react'
 import { useCarousel } from '../hooks/useCarousel'
 import { useRevealOnScroll } from '../hooks/useRevealOnScroll'
 import opendoor from '/assets/opendoor.jpg'
 import result from '/assets/result.jpg'
 import lab from '/assets/LAB.jpg'
+import journalisme from '/assets/journalisme.jpg'
+import dicte from '/assets/dicte.jpg'
+import appellation from '/assets/appellation.jpg'
 import imagelabo from '/assets/imagelabo.jpg'
 import imagelabo2 from '/assets/imagelabo2.jpg'
 import layout1 from '/assets/layout1.png'
@@ -44,62 +47,52 @@ const jeuxEtConcours = [
     title: 'Concours de Journalisme',
     description:
       'Participez à notre concours de journalisme annuel ! Les élèves peuvent exprimer leur créativité à travers l\'écriture d\'articles, de reportages et d\'interviews. Une excellente opportunité pour développer les compétences en communication et en expression écrite.',
-    image: imagelabo,
+    image: journalisme,
     alt: 'Concours de Journalisme',
+    icon: (
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+      </svg>
+    ),
   },
   {
     id: 2,
     title: 'Concours de Dictée',
     description:
       'Testez vos compétences orthographiques et grammaticales lors de notre concours de dictée. Ouvert à tous les niveaux, ce concours encourage l\'excellence en français et récompense les meilleurs participants.',
-    image: imagelabo2,
+    image: dicte,
     alt: 'Concours de Dictée',
+    icon: (
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+      </svg>
+    ),
   },
   {
     id: 3,
     title: 'Concours d\'Appellation',
     description:
       'Défiez votre vocabulaire et votre culture générale avec notre concours d\'appellation. Les participants doivent identifier et nommer correctement des objets, concepts et personnalités. Un défi intellectuel stimulant pour tous les élèves.',
-    image: layout1,
+    image: appellation,
     alt: 'Concours d\'Appellation',
+    icon: (
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+      </svg>
+    ),
   },
 ]
 
 const Activites = () => {
   const headerRef = useRevealOnScroll()
-  const wrapperRef = useRef<HTMLDivElement>(null)
-
-  // Révéler tous les éléments avec la classe "reveal" dans cette section
-  useEffect(() => {
-    const revealElements = document.querySelectorAll('#activites .reveal')
-    if (revealElements.length === 0) return
-
-    const revealPoint = 150
-    const windowHeight = window.innerHeight
-
-    const revealOnScroll = () => {
-      revealElements.forEach((element) => {
-        const elementTop = element.getBoundingClientRect().top
-        if (elementTop < windowHeight - revealPoint) {
-          element.classList.add('active')
-        }
-      })
-    }
-
-    // Vérifier immédiatement au chargement
-    setTimeout(revealOnScroll, 100)
-    window.addEventListener('scroll', revealOnScroll)
-    window.addEventListener('resize', revealOnScroll)
-
-    return () => {
-      window.removeEventListener('scroll', revealOnScroll)
-      window.removeEventListener('resize', revealOnScroll)
-    }
-  }, [])
+  const carouselRevealRef = useRevealOnScroll()
+  const jeuxRevealRef = useRevealOnScroll()
   const { currentIndex, goToSlide, nextSlide, prevSlide, startAutoPlay, stopAutoPlay } = useCarousel(
     activities.length,
     5000
   )
+
+  const trackTransform = useMemo(() => `translateX(-${currentIndex * 100}%)`, [currentIndex])
 
   return (
     <section id="activites" className="section section-alt">
@@ -111,19 +104,19 @@ const Activites = () => {
 
         <div
           className="carousel-wrapper reveal"
-          ref={wrapperRef}
+          ref={carouselRevealRef}
           onMouseEnter={stopAutoPlay}
           onMouseLeave={startAutoPlay}
         >
           <div className="carousel-container">
             <div
               className="carousel-track"
-              style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+              style={{ transform: trackTransform }}
             >
               {activities.map((activity) => (
                 <div key={activity.id} className="activity-card">
                   <div className="activity-card-image">
-                    <img src={activity.image} alt={activity.alt} />
+                    <img src={activity.image} alt={activity.alt} loading="lazy" decoding="async" />
                   </div>
                   <div className="activity-card-content">
                     <div className="activity-date">{activity.date}</div>
@@ -169,13 +162,16 @@ const Activites = () => {
         </div>
 
         {/* Section Jeux et Concours */}
-        <div className="jeux-concours-section reveal">
+        <div className="jeux-concours-section reveal" ref={jeuxRevealRef}>
           <h3 className="jeux-concours-title">Jeux et concours organisés</h3>
           <div className="jeux-concours-grid">
             {jeuxEtConcours.map((concours) => (
               <div key={concours.id} className="concours-card">
                 <div className="concours-card-image">
-                  <img src={concours.image} alt={concours.alt} />
+                  <img src={concours.image} alt={concours.alt} loading="lazy" decoding="async" />
+                  <div className="concours-icon-overlay">
+                    {concours.icon}
+                  </div>
                 </div>
                 <div className="concours-card-content">
                   <h4 className="concours-title">{concours.title}</h4>

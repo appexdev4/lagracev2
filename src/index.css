@@ -23,6 +23,7 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
@@ -492,6 +493,7 @@ a:focus {
   align-items: center;
   transition: transform 0.3s ease;
   animation: float 3s ease-in-out infinite;
+  will-change: transform;
 }
 
 .stat-blob-1 {
@@ -864,11 +866,12 @@ a:focus {
 .carousel-track {
   display: flex;
   transition: transform 0.5s ease-in-out;
-  gap: 2rem;
+  will-change: transform;
 }
 
 .activity-card {
   min-width: 100%;
+  width: 100%;
   background-color: var(--white);
   border-radius: 12px;
   overflow: hidden;
@@ -876,6 +879,8 @@ a:focus {
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  flex-shrink: 0;
+  box-sizing: border-box;
 }
 
 .activity-card:hover {
@@ -895,6 +900,9 @@ a:focus {
   height: 100%;
   object-fit: cover;
   display: block;
+  will-change: auto;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
 }
 
 .activity-card-content {
@@ -1062,6 +1070,35 @@ a:focus {
 
 .concours-card:hover .concours-card-image img {
   transform: scale(1.05);
+}
+
+.concours-icon-overlay {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  width: 56px;
+  height: 56px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-blue);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.concours-icon-overlay svg {
+  width: 28px;
+  height: 28px;
+}
+
+.concours-card:hover .concours-icon-overlay {
+  background-color: var(--primary-blue);
+  color: var(--white);
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(30, 95, 153, 0.4);
 }
 
 .concours-card-content {
@@ -1466,11 +1503,13 @@ a:focus {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
 }
 
 .reveal.active {
   opacity: 1;
   transform: translateY(0);
+  will-change: auto;
 }
 
 .reveal-delay-1 {
@@ -2179,6 +2218,18 @@ a:focus {
 
   .concours-card-image {
     height: 180px;
+  }
+
+  .concours-icon-overlay {
+    width: 44px;
+    height: 44px;
+    top: 10px;
+    right: 10px;
+  }
+
+  .concours-icon-overlay svg {
+    width: 22px;
+    height: 22px;
   }
 
   .concours-card-content {
