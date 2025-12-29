@@ -10,6 +10,7 @@ const Header = () => {
     { id: 'apropos', label: 'À Propos', href: '#apropos' },
     { id: 'atouts', label: 'Nos Atouts', href: '#atouts' },
     { id: 'activites', label: 'Activités', href: '#activites' },
+    { id: 'divers', label: 'Divers', href: '#divers' },
     { id: 'contact', label: 'Contact', href: '#contact' },
   ]
 

@@ -35,6 +35,33 @@ const activities = [
   },
 ]
 
+const jeuxEtConcours = [
+  {
+    id: 1,
+    title: 'Concours de Journalisme',
+    description:
+      'Participez à notre concours de journalisme annuel ! Les élèves peuvent exprimer leur créativité à travers l\'écriture d\'articles, de reportages et d\'interviews. Une excellente opportunité pour développer les compétences en communication et en expression écrite.',
+    image: imagelabo,
+    alt: 'Concours de Journalisme',
+  },
+  {
+    id: 2,
+    title: 'Concours de Dictée',
+    description:
+      'Testez vos compétences orthographiques et grammaticales lors de notre concours de dictée. Ouvert à tous les niveaux, ce concours encourage l\'excellence en français et récompense les meilleurs participants.',
+    image: imagelabo2,
+    alt: 'Concours de Dictée',
+  },
+  {
+    id: 3,
+    title: 'Concours d\'Appellation',
+    description:
+      'Défiez votre vocabulaire et votre culture générale avec notre concours d\'appellation. Les participants doivent identifier et nommer correctement des objets, concepts et personnalités. Un défi intellectuel stimulant pour tous les élèves.',
+    image: layout1,
+    alt: 'Concours d\'Appellation',
+  },
+]
+
 const Activites = () => {
   const headerRef = useRevealOnScroll()
   const wrapperRef = useRef<HTMLDivElement>(null)
@@ -134,6 +161,24 @@ const Activites = () => {
                 aria-label={`Aller à la slide ${index + 1}`}
                 onClick={() => goToSlide(index)}
               />
+            ))}
+          </div>
+        </div>
+
+        {/* Section Jeux et Concours */}
+        <div className="jeux-concours-section reveal">
+          <h3 className="jeux-concours-title">Jeux et concours organisés</h3>
+          <div className="jeux-concours-grid">
+            {jeuxEtConcours.map((concours) => (
+              <div key={concours.id} className="concours-card">
+                <div className="concours-card-image">
+                  <img src={concours.image} alt={concours.alt} />
+                </div>
+                <div className="concours-card-content">
+                  <h4 className="concours-title">{concours.title}</h4>
+                  <p className="concours-description">{concours.description}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
