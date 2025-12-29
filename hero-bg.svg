@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <!-- Placeholder d'arrière-plan - Remplacez par votre image -->
+  <!-- Pour utiliser une vraie image, remplacez hero-bg.svg par hero-bg.jpg dans styles.css -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1E5F99;stop-opacity:0.9" />
+      <stop offset="100%" style="stop-color:#163F66;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bgGradient)"/>
+  <!-- Motif discret -->
+  <circle cx="200" cy="200" r="2" fill="white" opacity="0.1"/>
+  <circle cx="1720" cy="300" r="2" fill="white" opacity="0.1"/>
+  <circle cx="300" cy="880" r="2" fill="white" opacity="0.1"/>
+  <circle cx="1620" cy="780" r="2" fill="white" opacity="0.1"/>
+</svg>
+
+
+
+
+
+
