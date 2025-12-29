@@ -64,11 +64,13 @@ const Atouts = () => {
                 />
               </svg>
             </div>
-            <h3 className="atout-feature-title">Laboratoire Scientifique Moderne</h3>
-            <p className="atout-feature-desc">
-              Notre laboratoire de pointe offre aux élèves une expérience pratique inégalée avec des équipements
-              scientifiques modernes pour l'apprentissage des sciences.
-            </p>
+            <div className="atout-text-content">
+              <h3 className="atout-feature-title">Laboratoire Scientifique Moderne</h3>
+              <p className="atout-feature-desc">
+                Notre laboratoire de pointe offre aux élèves une expérience pratique inégalée avec des équipements
+                scientifiques modernes pour l'apprentissage des sciences.
+              </p>
+            </div>
           </div>
 
           {/* Bottom Left: Texte Enseignants */}
@@ -90,11 +92,13 @@ const Atouts = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14v7" />
               </svg>
             </div>
-            <h3 className="atout-feature-title">Enseignants Hautement Qualifiés</h3>
-            <p className="atout-feature-desc">
-              Notre équipe pédagogique est composée d'enseignants expérimentés et passionnés, dédiés à la réussite de
-              chaque élève avec des méthodes d'enseignement innovantes.
-            </p>
+            <div className="atout-text-content">
+              <h3 className="atout-feature-title">Enseignants Hautement Qualifiés</h3>
+              <p className="atout-feature-desc">
+                Notre équipe pédagogique est composée d'enseignants expérimentés et passionnés, dédiés à la réussite de
+                chaque élève avec des méthodes d'enseignement innovantes.
+              </p>
+            </div>
           </div>
 
           {/* Bottom Right: Image Enseignant */}
@@ -125,11 +129,13 @@ const Atouts = () => {
                 />
               </svg>
             </div>
-            <h3 className="atout-feature-title">Salle Informatique Moderne</h3>
-            <p className="atout-feature-desc">
-              Notre salle informatique équipée d'ordinateurs performants permet aux élèves de maîtriser les outils
-              numériques et de développer leurs compétences technologiques dans un environnement adapté.
-            </p>
+            <div className="atout-text-content">
+              <h3 className="atout-feature-title">Salle Informatique Moderne</h3>
+              <p className="atout-feature-desc">
+                Notre salle informatique équipée d'ordinateurs performants permet aux élèves de maîtriser les outils
+                numériques et de développer leurs compétences technologiques dans un environnement adapté.
+              </p>
+            </div>
           </div>
         </div>
       </div>

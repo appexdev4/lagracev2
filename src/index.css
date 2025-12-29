@@ -801,6 +801,12 @@ a:focus {
   min-height: 100%;
 }
 
+.atout-text-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .atout-icon-wrapper {
   width: 64px;
   height: 64px;
@@ -818,6 +824,12 @@ a:focus {
   fill: none;
 }
 
+.atout-text-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
 .atout-feature-title {
   font-size: 24px;
   font-weight: 700;
@@ -831,6 +843,7 @@ a:focus {
   line-height: 1.7;
   color: var(--text-dark);
   opacity: 0.85;
+  margin-bottom: 0;
 }
 
 /* Carousel Activités */
@@ -1683,10 +1696,41 @@ a:focus {
   }
 
   /* Réinitialiser les positions de grille sur mobile */
+  .atouts-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .atouts-grid > .atout-image-block:nth-child(1) {
+    order: 1;
+  }
+
+  .atouts-grid > .atout-text-block:nth-child(2) {
+    order: 2;
+  }
+
+  .atouts-grid > .atout-text-block:nth-child(3) {
+    order: 4;
+  }
+
+  .atouts-grid > .atout-image-block:nth-child(4) {
+    order: 3;
+  }
+
+  .atouts-grid > .atout-image-block:nth-child(5) {
+    order: 5;
+  }
+
+  .atouts-grid > .atout-text-block:nth-child(6) {
+    order: 6;
+  }
+
   .atouts-grid > .atout-image-block,
   .atouts-grid > .atout-text-block {
     grid-column: 1;
     grid-row: auto;
+    width: 100%;
   }
 
   .atout-image-wrapper {
@@ -1702,8 +1746,51 @@ a:focus {
     bottom: -15px;
   }
 
+  .atout-image-block {
+    margin-bottom: 0;
+  }
+
+  .atout-image-wrapper {
+    margin-bottom: 0;
+    border-radius: 16px 16px 0 0;
+  }
+
+  .atout-image-wrapper::before {
+    border-radius: 80px 10px 0 0;
+  }
+
   .atout-text-block {
     padding: 1.5rem 1rem;
+    margin-top: 0;
+    position: relative;
+    background-color: var(--white);
+    border-radius: 0 0 16px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: auto;
+    margin-bottom: 0;
+  }
+
+  .atout-icon-wrapper {
+    display: none;
+  }
+
+  .atout-text-content {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .atout-feature-title {
+    margin-bottom: 0.75rem;
+    font-size: 18px;
+  }
+
+  .atout-feature-desc {
+    margin-bottom: 0;
+    column-count: 1;
+    text-align: left;
   }
 
   .atout-feature-title {
