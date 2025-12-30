@@ -893,6 +893,8 @@ a:focus {
   height: 250px;
   overflow: hidden;
   position: relative;
+  background: linear-gradient(135deg, rgba(30, 95, 153, 0.1) 0%, rgba(30, 95, 153, 0.05) 100%);
+  will-change: contents;
 }
 
 .activity-card-image img {
@@ -900,9 +902,14 @@ a:focus {
   height: 100%;
   object-fit: cover;
   display: block;
-  will-change: auto;
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  image-rendering: auto;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  will-change: opacity;
+}
+
+.activity-card-image img.loaded {
+  opacity: 1;
 }
 
 .activity-card-content {
@@ -1058,6 +1065,9 @@ a:focus {
   height: 200px;
   overflow: hidden;
   position: relative;
+  background-color: var(--light-gray);
+  background-image: linear-gradient(135deg, rgba(30, 95, 153, 0.1) 0%, rgba(30, 95, 153, 0.05) 100%);
+  will-change: contents;
 }
 
 .concours-card-image img {
@@ -1065,7 +1075,13 @@ a:focus {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.2s ease;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.concours-card-image img.loaded {
+  opacity: 1;
 }
 
 .concours-card:hover .concours-card-image img {

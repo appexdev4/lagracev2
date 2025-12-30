@@ -94,6 +94,20 @@ const Activites = () => {
 
   const trackTransform = useMemo(() => `translateX(-${currentIndex * 100}%)`, [currentIndex])
 
+  // Précharger les images suivantes du carousel de manière anticipée
+  useEffect(() => {
+    const preloadNextImages = () => {
+      const nextIndex = (currentIndex + 1) % activities.length
+      const nextImage = activities[nextIndex]?.image
+      if (nextImage) {
+        const img = new Image()
+        img.src = nextImage
+      }
+    }
+    
+    preloadNextImages()
+  }, [currentIndex])
+
   return (
     <section id="activites" className="section section-alt">
       <div className="container">
@@ -113,10 +127,20 @@ const Activites = () => {
               className="carousel-track"
               style={{ transform: trackTransform }}
             >
-              {activities.map((activity) => (
+              {activities.map((activity, index) => (
                 <div key={activity.id} className="activity-card">
                   <div className="activity-card-image">
-                    <img src={activity.image} alt={activity.alt} loading="lazy" decoding="async" />
+                    <img 
+                      src={activity.image} 
+                      alt={activity.alt} 
+                      loading="eager"
+                      fetchPriority={index === 0 ? "high" : index === 1 ? "high" : "auto"}
+                      decoding={index === 0 ? "sync" : "async"}
+                      onLoad={(e) => {
+                        const target = e.target as HTMLImageElement
+                        target.classList.add('loaded')
+                      }}
+                    />
                   </div>
                   <div className="activity-card-content">
                     <div className="activity-date">{activity.date}</div>
@@ -165,10 +189,24 @@ const Activites = () => {
         <div className="jeux-concours-section reveal" ref={jeuxRevealRef}>
           <h3 className="jeux-concours-title">Jeux et concours organisés</h3>
           <div className="jeux-concours-grid">
-            {jeuxEtConcours.map((concours) => (
+            {jeuxEtConcours.map((concours, index) => (
               <div key={concours.id} className="concours-card">
                 <div className="concours-card-image">
-                  <img src={concours.image} alt={concours.alt} loading="lazy" decoding="async" />
+                  <img 
+                    src={concours.image} 
+                    alt={concours.alt} 
+                    loading="eager"
+                    fetchPriority={index === 0 ? "high" : index === 1 ? "high" : "auto"}
+                    decoding={index === 0 ? "sync" : "async"}
+                    onLoad={(e) => {
+                      const target = e.target as HTMLImageElement
+                      target.classList.add('loaded')
+                    }}
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement
+                      target.style.display = 'none'
+                    }}
+                  />
                   <div className="concours-icon-overlay">
                     {concours.icon}
                   </div>
