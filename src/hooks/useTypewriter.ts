@@ -6,7 +6,7 @@ export const useTypewriter = (text: string, speed: number = 150, deleteSpeed: nu
   const iRef = useRef(0)
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout
+    let timeoutId: ReturnType<typeof setTimeout>
 
     const type = () => {
       if (!isDeletingRef.current && iRef.current < text.length) {

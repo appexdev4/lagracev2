@@ -2,17 +2,41 @@ import { useState, useEffect, useRef } from 'react'
 
 export const useCarousel = (totalSlides: number, autoPlayInterval: number = 5000) => {
   const [currentIndex, setCurrentIndex] = useState(0)
-  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const goToSlide = (index: number) => {
+    // Ajouter will-change juste avant la transition
+    const track = document.querySelector('.carousel-track') as HTMLElement
+    if (track) {
+      track.style.willChange = 'transform'
+      setTimeout(() => {
+        track.style.willChange = 'auto'
+      }, 500)
+    }
     setCurrentIndex(index)
   }
 
   const nextSlide = () => {
+    // Ajouter will-change juste avant la transition
+    const track = document.querySelector('.carousel-track') as HTMLElement
+    if (track) {
+      track.style.willChange = 'transform'
+      setTimeout(() => {
+        track.style.willChange = 'auto'
+      }, 500)
+    }
     setCurrentIndex((prev) => (prev + 1) % totalSlides)
   }
 
   const prevSlide = () => {
+    // Ajouter will-change juste avant la transition
+    const track = document.querySelector('.carousel-track') as HTMLElement
+    if (track) {
+      track.style.willChange = 'transform'
+      setTimeout(() => {
+        track.style.willChange = 'auto'
+      }, 500)
+    }
     setCurrentIndex((prev) => (prev - 1 + totalSlides) % totalSlides)
   }
 

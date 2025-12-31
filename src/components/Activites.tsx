@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useCarousel } from '../hooks/useCarousel'
 import { useRevealOnScroll } from '../hooks/useRevealOnScroll'
 import opendoor from '/assets/opendoor.jpg'
@@ -7,9 +7,6 @@ import lab from '/assets/LAB.jpg'
 import journalisme from '/assets/journalisme.jpg'
 import dicte from '/assets/dicte.jpg'
 import appellation from '/assets/appellation.jpg'
-import imagelabo from '/assets/imagelabo.jpg'
-import imagelabo2 from '/assets/imagelabo2.jpg'
-import layout1 from '/assets/layout1.png'
 
 const activities = [
   {
@@ -85,8 +82,6 @@ const jeuxEtConcours = [
 
 const Activites = () => {
   const headerRef = useRevealOnScroll()
-  const carouselRevealRef = useRevealOnScroll()
-  const jeuxRevealRef = useRevealOnScroll()
   const { currentIndex, goToSlide, nextSlide, prevSlide, startAutoPlay, stopAutoPlay } = useCarousel(
     activities.length,
     5000
@@ -94,18 +89,51 @@ const Activites = () => {
 
   const trackTransform = useMemo(() => `translateX(-${currentIndex * 100}%)`, [currentIndex])
 
-  // Précharger les images suivantes du carousel de manière anticipée
+  // IntersectionObserver unique pour toute la section
   useEffect(() => {
-    const preloadNextImages = () => {
+    const revealElements = document.querySelectorAll('#activites .reveal')
+    if (revealElements.length === 0) return
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active')
+            setTimeout(() => {
+              entry.target.classList.add('animation-complete')
+            }, 400)
+            observer.unobserve(entry.target)
+          }
+        })
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    )
+
+    revealElements.forEach((element) => observer.observe(element))
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
+  // Précharger UNIQUEMENT l'image suivante, de manière optimisée
+  useEffect(() => {
+    const timer = setTimeout(() => {
       const nextIndex = (currentIndex + 1) % activities.length
       const nextImage = activities[nextIndex]?.image
-      if (nextImage) {
-        const img = new Image()
-        img.src = nextImage
+      if (nextImage && typeof nextImage === 'string') {
+        const link = document.createElement('link')
+        link.rel = 'prefetch'
+        link.as = 'image'
+        link.href = nextImage
+        document.head.appendChild(link)
       }
-    }
-    
-    preloadNextImages()
+    }, 500) // Délai pour ne pas bloquer le rendu
+
+    return () => clearTimeout(timer)
   }, [currentIndex])
 
   return (
@@ -118,7 +146,6 @@ const Activites = () => {
 
         <div
           className="carousel-wrapper reveal"
-          ref={carouselRevealRef}
           onMouseEnter={stopAutoPlay}
           onMouseLeave={startAutoPlay}
         >
@@ -133,9 +160,9 @@ const Activites = () => {
                     <img 
                       src={activity.image} 
                       alt={activity.alt} 
-                      loading="eager"
-                      fetchPriority={index === 0 ? "high" : index === 1 ? "high" : "auto"}
-                      decoding={index === 0 ? "sync" : "async"}
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={index === 0 ? "high" : "low"}
+                      decoding="async"
                       onLoad={(e) => {
                         const target = e.target as HTMLImageElement
                         target.classList.add('loaded')
@@ -186,18 +213,18 @@ const Activites = () => {
         </div>
 
         {/* Section Jeux et Concours */}
-        <div className="jeux-concours-section reveal" ref={jeuxRevealRef}>
+        <div className="jeux-concours-section reveal">
           <h3 className="jeux-concours-title">Jeux et concours organisés</h3>
           <div className="jeux-concours-grid">
-            {jeuxEtConcours.map((concours, index) => (
+            {jeuxEtConcours.map((concours) => (
               <div key={concours.id} className="concours-card">
                 <div className="concours-card-image">
                   <img 
                     src={concours.image} 
                     alt={concours.alt} 
-                    loading="eager"
-                    fetchPriority={index === 0 ? "high" : index === 1 ? "high" : "auto"}
-                    decoding={index === 0 ? "sync" : "async"}
+                    loading="lazy"
+                    fetchPriority="low"
+                    decoding="async"
                     onLoad={(e) => {
                       const target = e.target as HTMLImageElement
                       target.classList.add('loaded')

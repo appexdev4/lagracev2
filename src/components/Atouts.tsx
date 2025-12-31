@@ -7,47 +7,34 @@ import enseignant from '/assets/enseignant.jpg'
 const Atouts = () => {
   const headerRef = useRevealOnScroll()
 
-  // Révéler tous les éléments avec la classe "reveal" dans cette section
+  // Utiliser Intersection Observer pour les éléments reveal (beaucoup plus performant)
   useEffect(() => {
     const revealElements = document.querySelectorAll('#atouts .reveal')
     if (revealElements.length === 0) return
 
-    const revealPoint = 150
-    let windowHeight = window.innerHeight
-    let ticking = false
-    const revealedElements = new Set<Element>()
-
-    const revealOnScroll = () => {
-      if (ticking) return
-      ticking = true
-
-      requestAnimationFrame(() => {
-        revealElements.forEach((element) => {
-          if (revealedElements.has(element)) return
-          
-          const elementTop = element.getBoundingClientRect().top
-          if (elementTop < windowHeight - revealPoint) {
-            element.classList.add('active')
-            revealedElements.add(element)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active')
+            // Nettoyer après animation
+            setTimeout(() => {
+              entry.target.classList.add('animation-complete')
+            }, 400)
+            observer.unobserve(entry.target)
           }
         })
-        ticking = false
-      })
-    }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    )
 
-    const handleResize = () => {
-      windowHeight = window.innerHeight
-      revealOnScroll()
-    }
-
-    // Vérifier immédiatement au chargement
-    setTimeout(revealOnScroll, 100)
-    window.addEventListener('scroll', revealOnScroll, { passive: true })
-    window.addEventListener('resize', handleResize, { passive: true })
+    revealElements.forEach((element) => observer.observe(element))
 
     return () => {
-      window.removeEventListener('scroll', revealOnScroll)
-      window.removeEventListener('resize', handleResize)
+      observer.disconnect()
     }
   }, [])
 
@@ -63,7 +50,7 @@ const Atouts = () => {
           {/* Top Left: Image Laboratoire */}
           <div className="atout-image-block reveal">
             <div className="atout-image-wrapper">
-              <img src={laboimg} alt="Laboratoire scientifique" />
+              <img src={laboimg} alt="Laboratoire scientifique" loading="lazy" />
               <div className="atout-tag atout-tag-orange">Inauguré en 2024</div>
             </div>
           </div>
@@ -120,7 +107,7 @@ const Atouts = () => {
           {/* Bottom Right: Image Enseignant */}
           <div className="atout-image-block reveal reveal-delay-3">
             <div className="atout-image-wrapper">
-              <img src={enseignant} alt="Enseignant en cours" />
+              <img src={enseignant} alt="Enseignant en cours" loading="lazy" />
               <div className="atout-tag atout-tag-orange">Excellence pédagogique</div>
             </div>
           </div>
@@ -128,7 +115,7 @@ const Atouts = () => {
           {/* Third Row Left: Image Salle Informatique */}
           <div className="atout-image-block reveal reveal-delay-4">
             <div className="atout-image-wrapper">
-              <img src={salleinfo} alt="Salle informatique" />
+              <img src={salleinfo} alt="Salle informatique" loading="lazy" />
               <div className="atout-tag atout-tag-orange">Équipements modernes</div>
             </div>
           </div>

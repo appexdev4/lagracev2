@@ -4,47 +4,33 @@ import { useRevealOnScroll } from '../hooks/useRevealOnScroll'
 const Divers = () => {
   const headerRef = useRevealOnScroll()
 
-  // Révéler tous les éléments avec la classe "reveal" dans cette section
+  // Utiliser Intersection Observer pour les éléments reveal (beaucoup plus performant)
   useEffect(() => {
     const revealElements = document.querySelectorAll('#divers .reveal')
     if (revealElements.length === 0) return
 
-    const revealPoint = 150
-    let windowHeight = window.innerHeight
-    let ticking = false
-    const revealedElements = new Set<Element>()
-
-    const revealOnScroll = () => {
-      if (ticking) return
-      ticking = true
-
-      requestAnimationFrame(() => {
-        revealElements.forEach((element) => {
-          if (revealedElements.has(element)) return
-          
-          const elementTop = element.getBoundingClientRect().top
-          if (elementTop < windowHeight - revealPoint) {
-            element.classList.add('active')
-            revealedElements.add(element)
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active')
+            setTimeout(() => {
+              entry.target.classList.add('animation-complete')
+            }, 400)
+            observer.unobserve(entry.target)
           }
         })
-        ticking = false
-      })
-    }
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      }
+    )
 
-    const handleResize = () => {
-      windowHeight = window.innerHeight
-      revealOnScroll()
-    }
-
-    // Vérifier immédiatement au chargement
-    setTimeout(revealOnScroll, 100)
-    window.addEventListener('scroll', revealOnScroll, { passive: true })
-    window.addEventListener('resize', handleResize, { passive: true })
+    revealElements.forEach((element) => observer.observe(element))
 
     return () => {
-      window.removeEventListener('scroll', revealOnScroll)
-      window.removeEventListener('resize', handleResize)
+      observer.disconnect()
     }
   }, [])
 

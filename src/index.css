@@ -26,6 +26,34 @@ html {
   -webkit-overflow-scrolling: touch;
 }
 
+/* Optimisation scroll sur mobile */
+@media (max-width: 768px) {
+  html {
+    /* Désactiver smooth scroll sur mobile pour meilleure performance */
+    scroll-behavior: auto;
+  }
+}
+
+/* Performance: Réduire le paint lors du scroll */
+body * {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Désactiver les animations lourdes pendant le scroll */
+body.scrolling * {
+  animation-play-state: paused !important;
+  transition-duration: 0.1s !important;
+}
+
+/* Sauf pour les éléments critiques comme le header */
+body.scrolling .header,
+body.scrolling .header *,
+body.scrolling .carousel-track {
+  animation-play-state: running !important;
+  transition-duration: initial !important;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   font-size: 16px;
@@ -66,6 +94,10 @@ p {
 img {
   max-width: 100%;
   height: auto;
+  /* Optimisation du rendu des images */
+  image-rendering: auto;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 a {
@@ -361,6 +393,9 @@ a:focus {
 .section {
   padding: 80px 0;
   background-color: var(--bg-section-1);
+  /* Optimisation: Limiter le repaint pour les sections hors écran */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
 }
 
 .section-alt {
@@ -427,6 +462,16 @@ a:focus {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* Optimisation: Utiliser transform au lieu de changements de layout */
+.card,
+.cycle-card,
+.document-card,
+.activity-card,
+.concours-card {
+  transform: translateZ(0);
+  /* Force GPU acceleration pour animations plus fluides */
+}
+
 /* À propos */
 .about-grid {
   display: grid;
@@ -472,13 +517,13 @@ a:focus {
   gap: 2rem;
 }
 
-/* Animation de flottement pour les bulles */
+/* Animation de flottement pour les bulles - OPTIMISÉE */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-15px);
+    transform: translateY(-10px);
   }
 }
 
@@ -492,8 +537,19 @@ a:focus {
   justify-content: center;
   align-items: center;
   transition: transform 0.3s ease;
-  animation: float 3s ease-in-out infinite;
-  will-change: transform;
+  /* Animation désactivée par défaut pour économiser les ressources */
+}
+
+/* Activer l'animation seulement quand visible et pas en scroll */
+@media (prefers-reduced-motion: no-preference) {
+  .stat-blob.active {
+    animation: float 4s ease-in-out infinite;
+  }
+  
+  /* Pause animation pendant le scroll pour optimiser performance */
+  body.scrolling .stat-blob {
+    animation-play-state: paused;
+  }
 }
 
 .stat-blob-1 {
@@ -522,7 +578,7 @@ a:focus {
 
 .stat-blob:hover {
   animation-play-state: paused;
-  transform: translateY(-10px) scale(1.05);
+  transform: translateY(-5px) scale(1.02);
 }
 
 .stat-number {
@@ -587,11 +643,12 @@ a:focus {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   border: 2px solid transparent;
   position: relative;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+  transform: translateZ(0);
 }
 
 .cycle-card:hover {
@@ -712,8 +769,10 @@ a:focus {
   aspect-ratio: 1;
   width: 80%;
   margin: 0 auto;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease;
   background-color: var(--primary-blue);
+  transform: translateZ(0);
+  /* Force GPU acceleration */
 }
 
 .atout-image-wrapper::before {
@@ -866,7 +925,7 @@ a:focus {
 .carousel-track {
   display: flex;
   transition: transform 0.5s ease-in-out;
-  will-change: transform;
+  /* will-change retiré - activé dynamiquement uniquement pendant transition */
 }
 
 .activity-card {
@@ -878,9 +937,10 @@ a:focus {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   flex-shrink: 0;
   box-sizing: border-box;
+  transform: translateZ(0);
 }
 
 .activity-card:hover {
@@ -894,7 +954,34 @@ a:focus {
   overflow: hidden;
   position: relative;
   background: linear-gradient(135deg, rgba(30, 95, 153, 0.1) 0%, rgba(30, 95, 153, 0.05) 100%);
-  will-change: contents;
+  /* Skeleton loader animé pendant chargement */
+}
+
+.activity-card-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(30, 95, 153, 0.05) 0%,
+    rgba(30, 95, 153, 0.15) 50%,
+    rgba(30, 95, 153, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  z-index: 1;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .activity-card-image img {
@@ -904,12 +991,17 @@ a:focus {
   display: block;
   image-rendering: auto;
   opacity: 0;
-  transition: opacity 0.2s ease;
-  will-change: opacity;
+  transition: opacity 0.4s ease;
+  position: relative;
+  z-index: 2;
 }
 
 .activity-card-image img.loaded {
   opacity: 1;
+}
+
+.activity-card-image img.loaded ~ .activity-card-image::before {
+  display: none;
 }
 
 .activity-card-content {
@@ -1052,7 +1144,8 @@ a:focus {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transform: translateZ(0);
 }
 
 .concours-card:hover {
@@ -1067,7 +1160,24 @@ a:focus {
   position: relative;
   background-color: var(--light-gray);
   background-image: linear-gradient(135deg, rgba(30, 95, 153, 0.1) 0%, rgba(30, 95, 153, 0.05) 100%);
-  will-change: contents;
+}
+
+.concours-card-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(30, 95, 153, 0.05) 0%,
+    rgba(30, 95, 153, 0.15) 50%,
+    rgba(30, 95, 153, 0.05) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  z-index: 1;
 }
 
 .concours-card-image img {
@@ -1075,13 +1185,18 @@ a:focus {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.3s ease, opacity 0.2s ease;
+  transition: transform 0.3s ease, opacity 0.4s ease;
   opacity: 0;
-  will-change: opacity, transform;
+  position: relative;
+  z-index: 2;
 }
 
 .concours-card-image img.loaded {
   opacity: 1;
+}
+
+.concours-card-image img.loaded + .concours-card-image::before {
+  animation: none;
 }
 
 .concours-card:hover .concours-card-image img {
@@ -1157,8 +1272,9 @@ a:focus {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   border: 2px solid transparent;
+  transform: translateZ(0);
 }
 
 .document-card:hover {
@@ -1514,34 +1630,42 @@ a:focus {
   font-size: 14px;
 }
 
-/* Scroll Reveal Animation */
+/* Scroll Reveal Animation - OPTIMISÉE */
 .reveal {
   opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-  will-change: opacity, transform;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  /* will-change retiré - sera ajouté dynamiquement juste avant animation */
 }
 
 .reveal.active {
   opacity: 1;
   transform: translateY(0);
-  will-change: auto;
+}
+
+/* Nettoyer will-change après l'animation */
+.reveal.animation-complete {
+  transition: none;
 }
 
 .reveal-delay-1 {
-  transition-delay: 0.1s;
+  transition-delay: 0.05s;
 }
 
 .reveal-delay-2 {
-  transition-delay: 0.2s;
+  transition-delay: 0.1s;
 }
 
 .reveal-delay-3 {
-  transition-delay: 0.3s;
+  transition-delay: 0.15s;
 }
 
 .reveal-delay-4 {
-  transition-delay: 0.4s;
+  transition-delay: 0.2s;
+}
+
+.reveal-delay-5 {
+  transition-delay: 0.25s;
 }
 
 /* Responsive - Mobile First */

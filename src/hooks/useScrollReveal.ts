@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-export const useScrollReveal = (delay: number = 0) => {
+export const useScrollReveal = () => {
   const elementRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -8,7 +8,7 @@ export const useScrollReveal = (delay: number = 0) => {
     if (!element) return
 
     const revealPoint = 150
-    const windowHeight = window.innerHeight
+    let windowHeight = window.innerHeight
 
     let ticking = false
     let isRevealed = false
@@ -39,7 +39,7 @@ export const useScrollReveal = (delay: number = 0) => {
 
     return () => {
       window.removeEventListener('scroll', revealOnScroll)
-      window.removeEventListener('resize', revealOnScroll)
+      window.removeEventListener('resize', handleResize)
     }
   }, [])
 
