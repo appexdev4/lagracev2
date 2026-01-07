@@ -167,3 +167,13 @@ Le site est maintenant **ultra fluide** avec:
 **Optimisé par**: Assistant IA
 **Performance**: ⚡⚡⚡⚡⚡ (5/5)
 
+
+
+# 1. Ajouter tous les fichiers modifiés
+git add .
+
+# 2. Faire le commit avec un message descriptif
+git commit -m "Optimisation performance: IntersectionObserver, lazy loading, skeleton loaders, animation mobile"
+
+# 3. Envoyer sur GitHub
+git push origin main

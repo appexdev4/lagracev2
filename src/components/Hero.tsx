@@ -1,7 +1,21 @@
 import { useTypewriter } from '../hooks/useTypewriter'
+import { useState, useEffect } from 'react'
 
 const Hero = () => {
+  const [isMobile, setIsMobile] = useState(false)
   const { displayText } = useTypewriter('La Grâce', 150, 75)
+
+  // Détecter si on est sur mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault()
@@ -25,7 +39,11 @@ const Hero = () => {
       <div className="container">
         <div className="hero-content">
           <h1 className="hero-title">
-            Complexe Scolaire <span className="typewriter-text">{displayText}</span>
+            Complexe Scolaire {isMobile ? (
+              <span className="logo-text-static">La Grâce</span>
+            ) : (
+              <span className="typewriter-text">{displayText}</span>
+            )}
           </h1>
           <p className="hero-subtitle">Excellence académique par le travail et la discipline</p>
           <p className="hero-description">
